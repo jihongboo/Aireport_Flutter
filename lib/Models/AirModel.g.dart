@@ -3,20 +3,25 @@
 part of 'AirModel.dart';
 
 // **************************************************************************
-// Generator: JsonSerializableGenerator
+// JsonSerializableGenerator
 // **************************************************************************
 
-AirModel _$AirModelFromJson(Map<String, dynamic> json) => new AirModel(
-    aqi: json['aqi'] as int,
-    idx: json['idx'] as int,
-    city: json['city'] == null
-        ? null
-        : new City.fromJson(json['city'] as Map<String, dynamic>));
-
-abstract class _$AirModelSerializerMixin {
-  int get aqi;
-  int get idx;
-  City get city;
-  Map<String, dynamic> toJson() =>
-      <String, dynamic>{'aqi': aqi, 'idx': idx, 'city': city};
+AirModel _$AirModelFromJson(Map<String, dynamic> json) {
+  return AirModel(
+      aqi: json['aqi'] as int,
+      idx: json['idx'] as int,
+      city: json['city'] == null
+          ? null
+          : City.fromJson(json['city'] as Map<String, dynamic>),
+      iaqi: (json['iaqi'] as Map<String, dynamic>)?.map((k, e) => MapEntry(
+          k,
+          (e as Map<String, dynamic>)
+              ?.map((k, e) => MapEntry(k, (e as num)?.toDouble())))));
 }
+
+Map<String, dynamic> _$AirModelToJson(AirModel instance) => <String, dynamic>{
+      'aqi': instance.aqi,
+      'idx': instance.idx,
+      'city': instance.city,
+      'iaqi': instance.iaqi
+    };

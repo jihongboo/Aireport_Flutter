@@ -6,54 +6,50 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 
 import 'SearchPage.dart';
-
-import 'API.dart' as API;
 import 'Models/AirResponse.dart';
+import 'API.dart' as API;
+import 'MainPageView.dart';
+import 'AQIView.dart';
 
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-//    debugPaintSizeEnabled = true;
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-    return MaterialApp(
-      title: 'Welcome to Flutter',
-      theme: ThemeData(
-        primaryColor: Colors.white,
-      ),
-      home: MainPage(),
-      routes: <String, WidgetBuilder>{
-        '/searchPage': (BuildContext context) => SearchPage(),
-      },
-    );
-  }
+  _MyAppState createState() => _MyAppState();
 }
 
-class MainPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return AQIView();
-  }
-}
+class _MyAppState extends State<MyApp> {
 
-class AQIView extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return AQIViewState();
-  }
-}
-
-class AQIViewState extends State<AQIView> {
   final String mAirResponse = "AirResponse";
-  var aqi = 0;
-  var place = "";
+  Color _primaryColor = Colors.black;
+  AirResponse _response;
 
   @override
   void initState() {
     super.initState();
     getData();
+  }
+
+  getData() {
+    getFromLocal().then((airResponse) {
+      if (airResponse != null) {
+        setState(() {
+          this._response = airResponse;
+        });
+      }
+    });
+    Future response = API.getAirReport();
+    response.then((response) {
+      final responseJson = json.decode(response.body);
+      final airResponse = new AirResponse.fromJson(responseJson);
+      saveToLocal(airResponse);
+      setState(() {
+        this._response = airResponse;
+      });
+    }).catchError((error) {
+      print(error);
+    }).whenComplete(() {});
   }
 
   saveToLocal(AirResponse airResponse) async {
@@ -69,90 +65,29 @@ class AQIViewState extends State<AQIView> {
       return null;
     }
     return AirResponse.fromJson(json.decode(jsonStr));
-
-  }
-
-  getData() {
-    getFromLocal().then((airResponse) {
-      if (airResponse != null) {
-        setState(() {
-          aqi = airResponse.data.aqi;
-          place = airResponse.data.city.name;
-        });
-      }
-    });
-    Future response = API.getAirReprot();
-    response.then((response) {
-      final responseJson = json.decode(response.body);
-      final airResponse = new AirResponse.fromJson(responseJson);
-      saveToLocal(airResponse);
-      setState(() {
-        aqi = airResponse.data.aqi;
-        place = airResponse.data.city.name;
-      });
-    }).catchError((error) {
-      print(error);
-    }).whenComplete(() {});
-  }
-
-  Color _getColor(int aqi) {
-    Color color = Color.fromARGB(255, 43, 153, 102);
-    if (aqi > 300) {
-      color = Color.fromARGB(255, 126, 2, 35);
-    }else if (aqi > 201) {
-      color = Color.fromARGB(255, 102, 0, 153);
-    }else if (aqi > 150) {
-      color = Color.fromARGB(255, 203, 5, 50);
-    }else if (aqi > 100) {
-      color = Color.fromARGB(255, 248, 153, 52);
-    }else if (aqi > 50) {
-      color = Color.fromARGB(255, 251, 222, 50);
-    }
-    return color;
   }
 
   @override
   Widget build(BuildContext context) {
-
-    // TODO: implement build
-    return Scaffold(
-        backgroundColor: _getColor(aqi),
-        body: Stack(
-          alignment: const Alignment(0.0, 0.8),
-          children: <Widget>[
-            Center(
-                child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(
-                  place,
-                  style: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                ),
-                Text(
-                  aqi.toString(),
-                  style: TextStyle(
-                      fontSize: 100.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                ),
-              ],
-            )),
-            IconButton(
-              icon: Icon(Icons.location_on),
-              onPressed: () {
-                Future future = Navigator.of(context).pushNamed("/searchPage");
-                future.then((value) {
-                  API.setCityUid(value);
-                  getData();
-                });
-              },
-              iconSize: 50.0,
-              color: Color.fromARGB(125, 255, 255, 255),
-            )
-          ],
-        ));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Welcome to Flutter',
+      theme: ThemeData(
+        primaryColor: _primaryColor,
+      ),
+      home: NotificationListener<StatusBarColorNotification>(
+        child: MainPageView(response: _response, tap: getData, routeObserver: routeObserver),
+        onNotification: (notification) {
+          setState(() {
+            _primaryColor = notification.color;
+          });
+        },
+      ),
+      navigatorObservers: [routeObserver],
+      routes: <String, WidgetBuilder>{
+        '/searchPage': (BuildContext context) => SearchPage(),
+      },
+    );
   }
 }

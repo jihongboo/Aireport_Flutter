@@ -4,10 +4,11 @@ part 'Station.g.dart';
 
 @JsonSerializable()
 
-class Station extends Object with _$StationSerializerMixin {
-  final String name;
+class Station {
+  String name = "";
 
   Station({this.name});
 
   factory Station.fromJson(Map<String, dynamic> json) => _$StationFromJson(json);
+  Map<String, dynamic> toJson() => _$StationToJson(this);
 }

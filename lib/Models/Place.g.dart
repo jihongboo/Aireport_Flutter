@@ -3,20 +3,20 @@
 part of 'Place.dart';
 
 // **************************************************************************
-// Generator: JsonSerializableGenerator
+// JsonSerializableGenerator
 // **************************************************************************
 
-Place _$PlaceFromJson(Map<String, dynamic> json) => new Place(
-    uid: json['uid'] as int,
-    aqi: json['aqi'] as String,
-    station: json['station'] == null
-        ? null
-        : new Station.fromJson(json['station'] as Map<String, dynamic>));
-
-abstract class _$PlaceSerializerMixin {
-  int get uid;
-  String get aqi;
-  Station get station;
-  Map<String, dynamic> toJson() =>
-      <String, dynamic>{'uid': uid, 'aqi': aqi, 'station': station};
+Place _$PlaceFromJson(Map<String, dynamic> json) {
+  return Place(
+      uid: json['uid'] as int,
+      aqi: json['aqi'] as String,
+      station: json['station'] == null
+          ? null
+          : Station.fromJson(json['station'] as Map<String, dynamic>));
 }
+
+Map<String, dynamic> _$PlaceToJson(Place instance) => <String, dynamic>{
+      'uid': instance.uid,
+      'aqi': instance.aqi,
+      'station': instance.station
+    };

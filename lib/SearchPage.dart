@@ -14,14 +14,14 @@ class SearchPage extends StatefulWidget {
 }
 
 class SearchPageState extends State<SearchPage> {
-  List<Place> citys = [];
+  List<Place> cities = [];
 
-  getCitys(String str) {
+  getCities(String str) {
     API.getCities(str).then((response) {
       final responseJson = json.decode(response.body);
       final laceResponse = new PlaceResponse.fromJson(responseJson);
       setState(() {
-        citys = laceResponse.data;
+        cities = laceResponse.data;
       });
     }).catchError((error) {
       print(error);
@@ -30,41 +30,44 @@ class SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    Widget divider = Divider(color: Colors.black12, height: 1.0, indent: 18,);
+
     return Scaffold(
         appBar: AppBar(
-          title: Text('搜索'),
+          title: Text('Search City'),
           elevation: 0.0,
         ),
-        body: Stack(
-          alignment: const Alignment(0.0, -1.0),
+        body: Column(
           children: <Widget>[
             Container(
               decoration: BoxDecoration(color: Colors.grey[100]),
               child: Padding(
-                padding: EdgeInsets.only(left: 18.0, right: 18.0),
-//              color: Colors.red,
-                child: TextField(
-                  autofocus: true,
-                  decoration: new InputDecoration(
-                      border: InputBorder.none,
-                      icon: Icon(
-                        Icons.search,
-                        color: Colors.black,
-                      ),
-                      hintText: 'Please enter your city'),
-                  onChanged: (str) {
-                    getCitys(str);
-                  },
+                padding: EdgeInsets.only(left: 14.0, right: 14.0),
+                child: Center(
+                  child: TextField(
+                    autofocus: true,
+                    decoration: new InputDecoration(
+                        border: InputBorder.none,
+                        icon: Icon(
+                          Icons.search,
+                          color: Colors.black,
+                        ),
+                        hintText: 'Please enter your city'),
+                    onChanged: (str) {
+                      getCities(str);
+                    },
+                  ),
                 ),
               ),
             ),
-            Container(
-              padding: EdgeInsets.only(top: 40.0),
-              child: ListView.builder(
-                itemCount: citys.length,
-                itemBuilder: (context, index) => EntryItem(citys[index]),
-              ),
-            )
+            Expanded(
+                child: ListView.separated(
+              itemCount: cities.length,
+              separatorBuilder: (BuildContext context, int index) {
+                return divider;
+              },
+              itemBuilder: (context, index) => EntryItem(cities[index]),
+            ))
           ],
         ));
   }
@@ -78,12 +81,14 @@ class EntryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return InkWell(
-      onTap: ((){
-        Navigator.of(context).pop(place.uid);
-      }),
-      child: ListTile(
-        title: Text(place.station.name),
+    return Center(
+      child: InkWell(
+        onTap: (() {
+          Navigator.of(context).pop(place.uid);
+        }),
+        child: ListTile(
+          title: Text(place.station.name),
+        ),
       ),
     );
   }

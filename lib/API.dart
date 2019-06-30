@@ -18,7 +18,7 @@ Future<String> get _cityUid async {
   return uid;
 }
 
-getAirReprot() async {
+getAirReport() async {
   final uid = await _cityUid;
   final city = uid == null ? "here" : "@$uid";
   final url = "https://api.waqi.info/feed/$city/?token=$token";

@@ -3,18 +3,16 @@
 part of 'PlaceResponse.dart';
 
 // **************************************************************************
-// Generator: JsonSerializableGenerator
+// JsonSerializableGenerator
 // **************************************************************************
 
-PlaceResponse _$PlaceResponseFromJson(Map<String, dynamic> json) =>
-    new PlaceResponse(
-        data: (json['data'] as List)
-            ?.map((e) => e == null
-                ? null
-                : new Place.fromJson(e as Map<String, dynamic>))
-            ?.toList());
-
-abstract class _$PlaceResponseSerializerMixin {
-  List<Place> get data;
-  Map<String, dynamic> toJson() => <String, dynamic>{'data': data};
+PlaceResponse _$PlaceResponseFromJson(Map<String, dynamic> json) {
+  return PlaceResponse(
+      data: (json['data'] as List)
+          ?.map((e) =>
+              e == null ? null : Place.fromJson(e as Map<String, dynamic>))
+          ?.toList());
 }
+
+Map<String, dynamic> _$PlaceResponseToJson(PlaceResponse instance) =>
+    <String, dynamic>{'data': instance.data};

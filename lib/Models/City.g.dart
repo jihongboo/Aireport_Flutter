@@ -3,13 +3,12 @@
 part of 'City.dart';
 
 // **************************************************************************
-// Generator: JsonSerializableGenerator
+// JsonSerializableGenerator
 // **************************************************************************
 
-City _$CityFromJson(Map<String, dynamic> json) =>
-    new City(name: json['name'] as String);
-
-abstract class _$CitySerializerMixin {
-  String get name;
-  Map<String, dynamic> toJson() => <String, dynamic>{'name': name};
+City _$CityFromJson(Map<String, dynamic> json) {
+  return City(name: json['name'] as String);
 }
+
+Map<String, dynamic> _$CityToJson(City instance) =>
+    <String, dynamic>{'name': instance.name};

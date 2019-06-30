@@ -3,13 +3,12 @@
 part of 'Station.dart';
 
 // **************************************************************************
-// Generator: JsonSerializableGenerator
+// JsonSerializableGenerator
 // **************************************************************************
 
-Station _$StationFromJson(Map<String, dynamic> json) =>
-    new Station(name: json['name'] as String);
-
-abstract class _$StationSerializerMixin {
-  String get name;
-  Map<String, dynamic> toJson() => <String, dynamic>{'name': name};
+Station _$StationFromJson(Map<String, dynamic> json) {
+  return Station(name: json['name'] as String);
 }
+
+Map<String, dynamic> _$StationToJson(Station instance) =>
+    <String, dynamic>{'name': instance.name};

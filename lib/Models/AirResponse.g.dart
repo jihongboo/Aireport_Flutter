@@ -3,15 +3,15 @@
 part of 'AirResponse.dart';
 
 // **************************************************************************
-// Generator: JsonSerializableGenerator
+// JsonSerializableGenerator
 // **************************************************************************
 
-AirResponse _$AirResponseFromJson(Map<String, dynamic> json) => new AirResponse(
-    data: json['data'] == null
-        ? null
-        : new AirModel.fromJson(json['data'] as Map<String, dynamic>));
-
-abstract class _$AirResponseSerializerMixin {
-  AirModel get data;
-  Map<String, dynamic> toJson() => <String, dynamic>{'data': data};
+AirResponse _$AirResponseFromJson(Map<String, dynamic> json) {
+  return AirResponse(
+      data: json['data'] == null
+          ? null
+          : AirModel.fromJson(json['data'] as Map<String, dynamic>));
 }
+
+Map<String, dynamic> _$AirResponseToJson(AirResponse instance) =>
+    <String, dynamic>{'data': instance.data};
